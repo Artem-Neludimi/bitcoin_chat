@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "901563232876",
+    "firebase_url": "https://bitcoin-chat-12589-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "bitcoin-chat-12589",
+    "storage_bucket": "bitcoin-chat-12589.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901563232876:android:39b23bdb87ec82d2f61e49",
+        "android_client_info": {
+          "package_name": "com.example.bitcoin_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901563232876-ef8n7rrifsn26dcim1cc642mfnt9du8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZwkPCzCZfKsC6T2qO5Jt0cwLBjNfmUOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901563232876-ef8n7rrifsn26dcim1cc642mfnt9du8l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
