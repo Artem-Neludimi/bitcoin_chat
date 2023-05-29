@@ -91,12 +91,15 @@ class _HomeState extends State<Home> {
                 Expanded(
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
+                    shrinkWrap: true,
+                    reverse: true,
                     itemCount: messages.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 3),
                     itemBuilder: (context, index) {
+                      index = (index - messages.length).abs() - 1;
                       final primaryColor = theme.colorScheme.primary;
-                      const offset = 0.2;
+                      const offset = 0.1;
                       return Wrap(
                         children: [
                           RichText(
@@ -104,7 +107,7 @@ class _HomeState extends State<Home> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: '${messages[index].nickname}: ',
+                                  text: '${messages[index].nickname}',
                                   style: TextStyle(
                                     color: Color(messages[index].color!),
                                     fontSize:
@@ -132,7 +135,8 @@ class _HomeState extends State<Home> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: messages[index].text,
+                                  style: theme.textTheme.bodyMedium,
+                                  text: ': ${messages[index].text}',
                                 ),
                               ],
                             ),
