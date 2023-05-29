@@ -3,7 +3,7 @@ class Message {
   String? text;
   String? uid;
   String? time;
-  String? color;
+  int? color;
   bool isSend = true;
 
   Message({
@@ -20,7 +20,7 @@ class Message {
     text = json['text'].toString();
     uid = json['uid'].toString();
     time = json['time'].toString();
-    color = json['color'].toString();
+    color = json['color'];
   }
 
   Map<String, dynamic> toJson() => {

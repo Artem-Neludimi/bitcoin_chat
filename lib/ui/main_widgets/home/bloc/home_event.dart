@@ -11,6 +11,8 @@ class NicknameEvent extends HomeEvent {
   NicknameEvent({this.title});
 }
 
+class ColorPickerEvent extends HomeEvent {}
+
 class AuthEvent extends HomeEvent {}
 
 class StreamMessageEvent extends HomeEvent {}

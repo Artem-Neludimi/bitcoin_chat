@@ -26,7 +26,7 @@ class _NicknameDialogState extends State<NicknameDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = NicknameDialogBloc(getIt<ChatRepository>(), getIt<User>());
+    final bloc = NicknameDialogBloc(ChatRepository(), getIt<User>());
     Widget buttonContent = const Text('chat');
 
     return BlocProvider(
@@ -55,7 +55,7 @@ class _NicknameDialogState extends State<NicknameDialog> {
         },
         builder: (context, state) {
           return AlertDialog(
-            title: widget.title,
+            title: Center(child: widget.title),
             content: TextField(
               controller: textController,
               decoration: InputDecoration(

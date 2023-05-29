@@ -1,4 +1,5 @@
 import 'package:bitcoin_chat/services/models/message.dart';
+import 'package:bitcoin_chat/ui/helper_widgets/color_picker_dialog.dart';
 import 'package:bitcoin_chat/ui/main_widgets/nickname_dialog/nickname_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _user = getIt<User>();
-  final _bloc = HomeBloc(getIt<ChatRepository>(), getIt<User>());
+  final _bloc = HomeBloc(ChatRepository(), getIt<User>());
   final _textController = TextEditingController();
   var _isAuth = false;
 
@@ -51,10 +52,15 @@ class _HomeState extends State<Home> {
           if (state is NicknameState) {
             showDialog(
               context: context,
+              barrierDismissible: false,
               builder: (context) => NicknameDialog(title: state.title),
             ).then((value) {
               _bloc.add(AuthEvent());
             });
+          }
+          if (state is ColorPickerState) {
+            showDialog(
+                context: context, builder: (context) => ColorPickerDialog());
           }
           if (state is ErrorState) {
             ScaffoldMessenger.of(context)
@@ -100,7 +106,7 @@ class _HomeState extends State<Home> {
                                 TextSpan(
                                   text: '${messages[index].nickname}: ',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Color(messages[index].color!),
                                     fontSize:
                                         theme.textTheme.bodyMedium!.fontSize! -
                                             offset,
@@ -202,11 +208,13 @@ class _HomeState extends State<Home> {
                                       text: text,
                                       uid: _user.uid,
                                       time: DateTime.now().toIso8601String(),
-                                      color: 'sdmksd',
+                                      color: _user.color,
                                     ),
                                   ),
                                 );
                                 _textController.clear();
+                              } else {
+                                _bloc.add(ColorPickerEvent());
                               }
                             },
                           )

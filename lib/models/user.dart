@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
-
-class User extends ChangeNotifier {
+class User {
   String? _nickname;
   String? _uid;
-  String? _color;
+  int? _color;
 
   String? get nickname => _nickname;
   String? get uid => _uid;
-  String? get color => _color;
+  int? get color => _color;
 
   bool get isAuth => _nickname != null && _nickname != '';
 
@@ -19,7 +17,7 @@ class User extends ChangeNotifier {
     _uid = uid;
   }
 
-  void setColor(String color) {
+  void setColor(int color) {
     _color = color;
   }
 }

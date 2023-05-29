@@ -19,6 +19,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) : super(HomeInitial()) {
     on<InitialEvent>(_onInitial);
     on<NicknameEvent>(_onNickname);
+    on<ColorPickerEvent>(_onColorPicker);
     on<AuthEvent>(_onAuth);
     on<StreamMessageEvent>(_onStreamMessage);
     on<WriteMessageEvent>(_onWriteMessage);
@@ -34,6 +35,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   _onNickname(NicknameEvent event, Emitter<HomeState> emit) {
     emit(NicknameState(title: event.title));
+  }
+
+  _onColorPicker(ColorPickerEvent event, Emitter<HomeState> emit) {
+    emit(ColorPickerState());
   }
 
   _onAuth(AuthEvent event, Emitter<HomeState> emit) {
