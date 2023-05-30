@@ -153,7 +153,8 @@ class _HomeState extends State<Home> {
                                     ),
                                     TextSpan(
                                       style: theme.textTheme.titleSmall,
-                                      text: ': ${messages[index].text}',
+                                      text:
+                                          ': ${messages[index].text!.replaceAll(RegExp('\\s+'), ' ')}',
                                     ),
                                   ],
                                 ),
