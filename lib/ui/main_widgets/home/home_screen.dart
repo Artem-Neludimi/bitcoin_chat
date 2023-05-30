@@ -21,6 +21,7 @@ class _HomeState extends State<Home> {
   final _user = getIt<User>();
   final _bloc = HomeBloc(ChatRepository(), getIt<User>());
   final _textController = TextEditingController();
+  final _scrollController = ScrollController();
   var _isAuth = false;
 
   @override
@@ -36,6 +37,7 @@ class _HomeState extends State<Home> {
   void dispose() {
     super.dispose();
     _textController.dispose();
+    _scrollController.dispose();
   }
 
   @override
@@ -60,13 +62,21 @@ class _HomeState extends State<Home> {
           }
           if (state is ColorPickerState) {
             showDialog(
-                context: context, builder: (context) => ColorPickerDialog());
+                context: context,
+                builder: (context) => const ColorPickerDialog());
           }
           if (state is ErrorState) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text('Error')));
           }
           if (state is MessagesState) {}
+          if (state is WriteMessageState) {
+            _scrollController.animateTo(
+              0,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.fastOutSlowIn,
+            );
+          }
         },
         builder: (context, state) {
           final List<Message> messages = context.read<HomeBloc>().messages;
@@ -90,6 +100,7 @@ class _HomeState extends State<Home> {
                 Placeholder(fallbackHeight: size.height * 0.3),
                 Expanded(
                   child: ListView.separated(
+                    controller: _scrollController,
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     shrinkWrap: true,
                     reverse: true,
