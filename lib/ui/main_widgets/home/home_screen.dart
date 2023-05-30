@@ -111,47 +111,64 @@ class _HomeState extends State<Home> {
                       index = (index - messages.length).abs() - 1;
                       final primaryColor = theme.colorScheme.primary;
                       const offset = 0.1;
-                      return Wrap(
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          RichText(
-                            textDirection: TextDirection.ltr,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: '${messages[index].nickname}',
-                                  style: TextStyle(
-                                    color: Color(messages[index].color!),
-                                    fontSize:
-                                        theme.textTheme.bodyMedium!.fontSize! -
+                          Wrap(
+                            children: [
+                              RichText(
+                                textDirection: TextDirection.ltr,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: '${messages[index].nickname}',
+                                      style: TextStyle(
+                                        color: Color(messages[index].color!),
+                                        fontSize: theme.textTheme.titleSmall!
+                                                .fontSize! -
                                             offset,
-                                    shadows: [
-                                      Shadow(
-                                          // bottomLeft
-                                          offset:
-                                              const Offset(-offset, -offset),
-                                          color: primaryColor),
-                                      Shadow(
-                                          // bottomRight
-                                          offset: const Offset(offset, -offset),
-                                          color: primaryColor),
-                                      Shadow(
-                                          // topRight
-                                          offset: const Offset(offset, offset),
-                                          color: primaryColor),
-                                      Shadow(
-                                          // topLeft
-                                          offset: const Offset(-offset, offset),
-                                          color: primaryColor),
-                                    ],
-                                  ),
+                                        shadows: [
+                                          Shadow(
+                                              // bottomLeft
+                                              offset: const Offset(
+                                                  -offset, -offset),
+                                              color: primaryColor),
+                                          Shadow(
+                                              // bottomRight
+                                              offset:
+                                                  const Offset(offset, -offset),
+                                              color: primaryColor),
+                                          Shadow(
+                                              // topRight
+                                              offset:
+                                                  const Offset(offset, offset),
+                                              color: primaryColor),
+                                          Shadow(
+                                              // topLeft
+                                              offset:
+                                                  const Offset(-offset, offset),
+                                              color: primaryColor),
+                                        ],
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      style: theme.textTheme.titleSmall,
+                                      text: ': ${messages[index].text}',
+                                    ),
+                                  ],
                                 ),
-                                TextSpan(
-                                  style: theme.textTheme.bodyMedium,
-                                  text: ': ${messages[index].text}',
-                                ),
-                              ],
+                              )
+                            ],
+                          ),
+                          if (messages[index].isWhenUserJoin)
+                            Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.only(top: 5),
+                              child: const Text(
+                                'Welcome to the chat!',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
                             ),
-                          )
                         ],
                       );
                     },
