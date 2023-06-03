@@ -1,13 +1,20 @@
-import 'package:bitcoin_chat/services/models/message.dart';
-import 'package:bitcoin_chat/ui/helper_widgets/color_picker_dialog.dart';
-import 'package:bitcoin_chat/ui/main_widgets/nickname_dialog/nickname_dialog.dart';
+import 'dart:convert';
+
+import 'package:bitcoin_chat/ui/main_widgets/chart/chart.dart';
+import 'package:candlesticks/candlesticks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../services/api/chat_repository.dart';
 import '../../../../services/get_it.dart';
 import '../../../models/user.dart';
+import '../../../services/api/currency_repository.dart';
+import '../../../services/models/candle_ticker_model.dart';
+import '../../../services/models/message.dart';
+import '../../helper_widgets/color_picker_dialog.dart';
 import '../../helper_widgets/currency_app_bar.dart';
+import '../nickname_dialog/nickname_dialog.dart';
 import 'bloc/home_bloc.dart';
 
 class Home extends StatefulWidget {
@@ -97,7 +104,7 @@ class _HomeState extends State<Home> {
             appBar: const CurrencyAppBar(),
             body: Column(
               children: [
-                Placeholder(fallbackHeight: size.height * 0.3),
+                const Chart(),
                 Expanded(
                   child: ListView.separated(
                     controller: _scrollController,
