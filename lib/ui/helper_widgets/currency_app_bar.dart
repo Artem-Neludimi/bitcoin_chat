@@ -1,11 +1,9 @@
-import 'package:bitcoin_chat/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double statusBarHeight;
 
-  CurrencyAppBar(this.statusBarHeight);
+  const CurrencyAppBar(this.statusBarHeight, {super.key});
 
   @override
   Size get preferredSize => Size.fromHeight(statusBarHeight);

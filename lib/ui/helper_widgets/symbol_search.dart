@@ -35,7 +35,7 @@ class _SymbolSearchModalState extends State<SymbolsSearch> {
           ),
           Expanded(
             child: GridView(
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 130,
               ),
               children: widget.symbols

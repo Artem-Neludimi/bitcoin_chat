@@ -71,7 +71,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             controller: controller,
             decoration: InputDecoration(
               isDense: true,
-              prefixIcon: Icon(
+              prefixIcon: const Icon(
                 Icons.search,
               ),
               filled: true,

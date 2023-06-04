@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 import 'package:bitcoin_chat/services/api/chat_repository.dart';
 import 'package:bitcoin_chat/services/models/message.dart';
@@ -19,6 +18,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) : super(HomeInitial()) {
     on<InitialEvent>(_onInitial);
     on<NicknameEvent>(_onNickname);
+    on<SettingsEvent>(_onSettings);
     on<ColorPickerEvent>(_onColorPicker);
     on<AuthEvent>(_onAuth);
     on<StreamMessageEvent>(_onStreamMessage);
@@ -35,6 +35,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   _onNickname(NicknameEvent event, Emitter<HomeState> emit) {
     emit(NicknameState(title: event.title));
+  }
+
+  _onSettings(SettingsEvent event, Emitter<HomeState> emit) {
+    emit(SettingsState());
   }
 
   _onColorPicker(ColorPickerEvent event, Emitter<HomeState> emit) {

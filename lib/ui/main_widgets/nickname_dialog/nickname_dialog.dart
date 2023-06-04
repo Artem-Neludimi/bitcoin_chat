@@ -1,12 +1,11 @@
-import 'dart:async';
-
-import 'package:bitcoin_chat/services/api/chat_repository.dart';
-import 'package:bitcoin_chat/services/get_it.dart';
-import 'package:bitcoin_chat/ui/main_widgets/nickname_dialog/bloc/nickname_dialog_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../models/user.dart';
+import '../../../services/api/chat_repository.dart';
+import '../../../services/get_it.dart';
+import 'bloc/nickname_dialog_bloc.dart';
 
 class NicknameDialog extends StatefulWidget {
   final Widget? title;
@@ -19,7 +18,6 @@ class NicknameDialog extends StatefulWidget {
 
 class _NicknameDialogState extends State<NicknameDialog> {
   final textController = TextEditingController();
-  late bool isPortrait;
 
   @override
   void dispose() {
@@ -66,8 +64,9 @@ class _NicknameDialogState extends State<NicknameDialog> {
   @override
   Widget build(BuildContext context) {
     final bloc = NicknameDialogBloc(ChatRepository(), getIt<User>());
-    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    Widget buttonContent = const Text('chat');
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+    Widget buttonContent = const Text('chat').tr();
 
     return BlocProvider(
       create: (context) => bloc,
@@ -86,8 +85,8 @@ class _NicknameDialogState extends State<NicknameDialog> {
           }
           if (state is ErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Error'),
+              SnackBar(
+                content: const Text('error').tr(),
               ),
             );
             Navigator.of(context).pop();
@@ -105,7 +104,7 @@ class _NicknameDialogState extends State<NicknameDialog> {
                 child: TextField(
                   controller: textController,
                   decoration: InputDecoration(
-                    hintText: 'Nickname',
+                    hintText: 'nickname'.tr(),
                     filled: true,
                     border: OutlineInputBorder(
                       borderSide: BorderSide.none,

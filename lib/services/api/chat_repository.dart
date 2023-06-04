@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -26,10 +28,10 @@ class ChatRepository {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "operation-not-allowed":
-          print("Anonymous auth hasn't been enabled for this project.");
+          log("Anonymous auth hasn't been enabled for this project.");
           break;
         default:
-          print("Unknown error.");
+          log("Unknown error.");
       }
     }
   }

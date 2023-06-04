@@ -1,16 +1,12 @@
-import 'dart:convert';
-
+import 'package:bitcoin_chat/ui/helper_widgets/setting_dialog.dart';
 import 'package:bitcoin_chat/ui/main_widgets/chart/chart.dart';
-import 'package:candlesticks/candlesticks.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../services/api/chat_repository.dart';
 import '../../../../services/get_it.dart';
 import '../../../models/user.dart';
-import '../../../services/api/currency_repository.dart';
-import '../../../services/models/candle_ticker_model.dart';
 import '../../../services/models/message.dart';
 import '../../helper_widgets/color_picker_dialog.dart';
 import '../../helper_widgets/currency_app_bar.dart';
@@ -49,7 +45,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
@@ -70,6 +65,12 @@ class _HomeState extends State<Home> {
               _bloc.add(AuthEvent());
             });
           }
+          if (state is SettingsState) {
+            showDialog(
+              context: context,
+              builder: (context) => const SettingsDialog(),
+            );
+          }
           if (state is ColorPickerState) {
             showDialog(
                 context: context,
@@ -77,7 +78,7 @@ class _HomeState extends State<Home> {
           }
           if (state is ErrorState) {
             ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('Error')));
+                .showSnackBar(SnackBar(content: const Text('error').tr()));
           }
           if (state is MessagesState) {}
           if (state is WriteMessageState) {
@@ -107,7 +108,23 @@ class _HomeState extends State<Home> {
             appBar: CurrencyAppBar(statusBarHeight),
             body: Column(
               children: [
-                Chart(statusBarHeight: statusBarHeight),
+                Stack(
+                  children: [
+                    Chart(statusBarHeight: statusBarHeight),
+                    Positioned(
+                      top: -8,
+                      right: -8,
+                      child: IconButton(
+                        onPressed: () {
+                          _bloc.add(SettingsEvent());
+                        },
+                        icon: const Icon(
+                          Icons.settings,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
                 if (isPortrait) ...[
                   Expanded(
                     child: ListView.separated(
@@ -128,7 +145,6 @@ class _HomeState extends State<Home> {
                             Wrap(
                               children: [
                                 RichText(
-                                  textDirection: TextDirection.ltr,
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
@@ -177,9 +193,9 @@ class _HomeState extends State<Home> {
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.only(top: 5),
                                 child: const Text(
-                                  'Welcome to the chat!',
+                                  'welcome',
                                   style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
+                                ).tr(),
                               ),
                           ],
                         );
@@ -191,7 +207,7 @@ class _HomeState extends State<Home> {
                       if (!_isAuth) {
                         _bloc.add(
                           NicknameEvent(
-                            title: const Text('Set a nickname first'),
+                            title: const Text('nicknameSet').tr(),
                           ),
                         );
                       }
@@ -212,7 +228,7 @@ class _HomeState extends State<Home> {
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 5, horizontal: 20),
-                                  hintText: 'Send a message',
+                                  hintText: 'sendMessage'.tr(),
                                   isDense: true,
                                   filled: true,
                                   border: OutlineInputBorder(

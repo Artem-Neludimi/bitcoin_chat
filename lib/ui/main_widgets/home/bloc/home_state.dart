@@ -10,9 +10,10 @@ class NicknameState extends HomeState {
 
   NicknameState({this.title});
 }
-class ColorPickerState extends HomeState {
 
-}
+class SettingsEvent extends HomeEvent {}
+
+class ColorPickerState extends HomeState {}
 
 class AuthState extends HomeState {
   final bool isAuth;
