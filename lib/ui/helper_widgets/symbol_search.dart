@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'custom_text_field.dart';
+import 'currency_text_field.dart';
 
 class SymbolsSearch extends StatefulWidget {
   const SymbolsSearch({
@@ -25,7 +25,7 @@ class _SymbolSearchModalState extends State<SymbolsSearch> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CustomTextField(
+            child: CurrencyTextField(
               onChanged: (value) {
                 setState(() {
                   symbolSearch = value;

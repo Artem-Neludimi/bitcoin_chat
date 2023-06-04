@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatefulWidget {
-  const CustomTextField({Key? key, required this.onChanged}) : super(key: key);
+class CurrencyTextField extends StatefulWidget {
+  const CurrencyTextField({Key? key, required this.onChanged})
+      : super(key: key);
   final void Function(String) onChanged;
 
   @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
+  State<CurrencyTextField> createState() => _CurrencyTextFieldState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class _CurrencyTextFieldState extends State<CurrencyTextField> {
   final controller = TextEditingController();
+  late bool isPortrait;
+  bool isKeyboardDialogShown = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    if (!isPortrait &&
+        !isKeyboardDialogShown &&
+        MediaQuery.of(context).viewInsets.bottom == 0) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+  }
 
   @override
   void dispose() {
@@ -19,6 +33,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   void showFullScreenKeyboard(
       BuildContext context, TextEditingController txtCtrl) {
+    isKeyboardDialogShown = true;
     showDialog(
       context: context,
       builder: (context) {
@@ -51,7 +66,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
         );
       },
-    );
+    ).then((value) => isKeyboardDialogShown = false);
   }
 
   @override

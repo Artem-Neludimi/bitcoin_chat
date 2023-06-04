@@ -18,6 +18,19 @@ class NicknameDialog extends StatefulWidget {
 
 class _NicknameDialogState extends State<NicknameDialog> {
   final textController = TextEditingController();
+  bool isKeyboardDialogShown = false;
+  late bool isPortrait;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    if (!isPortrait &&
+        !isKeyboardDialogShown &&
+        MediaQuery.of(context).viewInsets.bottom != 0) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+  }
 
   @override
   void dispose() {
@@ -27,6 +40,7 @@ class _NicknameDialogState extends State<NicknameDialog> {
 
   void showFullScreenKeyboard(
       BuildContext context, TextEditingController txtCtrl) {
+    isKeyboardDialogShown = true;
     showDialog(
       context: context,
       builder: (context) {
@@ -58,14 +72,12 @@ class _NicknameDialogState extends State<NicknameDialog> {
           ),
         );
       },
-    );
+    ).then((value) => isKeyboardDialogShown = false);
   }
 
   @override
   Widget build(BuildContext context) {
     final bloc = NicknameDialogBloc(ChatRepository(), getIt<User>());
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
     Widget buttonContent = const Text('chat').tr();
 
     return BlocProvider(
