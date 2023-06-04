@@ -30,7 +30,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Bitcoin Chat',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark(useMaterial3: true),
+        theme: ThemeData.dark(useMaterial3: true).copyWith(
+          progressIndicatorTheme: const ProgressIndicatorThemeData(
+            color: Color(0xfff0b90a),
+          ),
+        ),
         home: const Home(),
       ),
     );

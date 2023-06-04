@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CurrencyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CurrencyAppBar({super.key});
+  final double statusBarHeight;
+
+  CurrencyAppBar(this.statusBarHeight);
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(statusBarHeight);
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(Provider.of<CurrencyProvider>(context, listen: false)
-          .currentCurrency),
-      centerTitle: true,
+    return SizedBox(
+      height: statusBarHeight,
     );
   }
 }

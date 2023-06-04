@@ -9,7 +9,9 @@ import '../../../services/models/candle_ticker_model.dart';
 import '../../helper_widgets/symbol_search.dart';
 
 class Chart extends StatefulWidget {
-  const Chart({super.key});
+  final double statusBarHeight;
+
+  const Chart({super.key, required this.statusBarHeight});
 
   @override
   State<Chart> createState() => _ChartState();
@@ -61,7 +63,7 @@ class _ChartState extends State<Chart> {
     fetchSymbols().then((value) {
       symbols = value;
       if (symbols.isNotEmpty) {
-        fetchCandles(/*symbols[11]*/ 'BTCUSDT', currentInterval);
+        fetchCandles(/*symbols[0]*/ 'BTCUSDT', currentInterval);
       }
     });
   }
@@ -158,9 +160,13 @@ class _ChartState extends State<Chart> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return SizedBox(
-      height: size.height * 0.35,
+      height: isPortrait
+          ? size.height * 0.45
+          : size.height - widget.statusBarHeight,
       child: StreamBuilder(
         stream: _channel == null ? null : _channel!.stream,
         builder: (context, snapshot) {
@@ -212,25 +218,25 @@ class _ChartState extends State<Chart> {
                   currentInterval,
                 ),
               ),
-              // ToolBarAction(
-              //   width: 100,
-              //   onPressed: () {
-              //     showDialog(
-              //       context: context,
-              //       builder: (context) {
-              //         return SymbolsSearch(
-              //           symbols: symbols,
-              //           onSelect: (value) {
-              //             fetchCandles(value, currentInterval);
-              //           },
-              //         );
-              //       },
-              //     );
-              //   },
-              //   child: Text(
-              //     currentSymbol,
-              //   ),
-              // )
+              ToolBarAction(
+                width: 100,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return SymbolsSearch(
+                        symbols: symbols,
+                        onSelect: (value) {
+                          fetchCandles(value, currentInterval);
+                        },
+                      );
+                    },
+                  );
+                },
+                child: Text(
+                  currentSymbol,
+                ),
+              )
             ],
           );
         },

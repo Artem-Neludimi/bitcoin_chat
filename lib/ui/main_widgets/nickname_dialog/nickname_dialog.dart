@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bitcoin_chat/services/api/chat_repository.dart';
 import 'package:bitcoin_chat/services/get_it.dart';
 import 'package:bitcoin_chat/ui/main_widgets/nickname_dialog/bloc/nickname_dialog_bloc.dart';
@@ -17,6 +19,7 @@ class NicknameDialog extends StatefulWidget {
 
 class _NicknameDialogState extends State<NicknameDialog> {
   final textController = TextEditingController();
+  late bool isPortrait;
 
   @override
   void dispose() {
@@ -24,9 +27,46 @@ class _NicknameDialogState extends State<NicknameDialog> {
     textController.dispose();
   }
 
+  void showFullScreenKeyboard(
+      BuildContext context, TextEditingController txtCtrl) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Scaffold(
+          body: Row(
+            children: [
+              const SizedBox(width: 10),
+              Flexible(
+                flex: 3,
+                child: TextField(
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                  autofocus: true,
+                  controller: txtCtrl,
+                ),
+              ),
+              Flexible(
+                child: Center(
+                  child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('OK')),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final bloc = NicknameDialogBloc(ChatRepository(), getIt<User>());
+    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     Widget buttonContent = const Text('chat');
 
     return BlocProvider(
@@ -56,19 +96,27 @@ class _NicknameDialogState extends State<NicknameDialog> {
         builder: (context, state) {
           return AlertDialog(
             title: Center(child: widget.title),
-            content: TextField(
-              controller: textController,
-              decoration: InputDecoration(
-                hintText: 'Nickname',
-                filled: true,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(50),
+            content: GestureDetector(
+              onTap: () {
+                showFullScreenKeyboard(context, textController);
+              },
+              child: AbsorbPointer(
+                absorbing: !isPortrait,
+                child: TextField(
+                  controller: textController,
+                  decoration: InputDecoration(
+                    hintText: 'Nickname',
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  onSubmitted: (value) {
+                    bloc.add(AuthEvent(value.trim()));
+                  },
                 ),
               ),
-              onSubmitted: (value) {
-                bloc.add(AuthEvent(value.trim()));
-              },
             ),
             actions: [
               Center(
