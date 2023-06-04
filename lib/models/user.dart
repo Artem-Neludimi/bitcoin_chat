@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class User {
   String? _nickname;
   String? _uid;
@@ -19,5 +21,9 @@ class User {
 
   void setColor(int color) {
     _color = color;
+  }
+
+  void setRandomColor() {
+    _color = Random().nextInt(0xffffffff);
   }
 }

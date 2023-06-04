@@ -49,6 +49,7 @@ class _NicknameDialogState extends State<NicknameDialog> {
               Flexible(
                 flex: 3,
                 child: TextField(
+                  maxLength: 25,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,
@@ -113,6 +114,7 @@ class _NicknameDialogState extends State<NicknameDialog> {
                 absorbing: !isPortrait,
                 child: TextField(
                   controller: textController,
+                  maxLength: 25,
                   decoration: InputDecoration(
                     hintText: 'nickname'.tr(),
                     filled: true,

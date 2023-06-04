@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:bitcoin_chat/services/api/chat_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +21,7 @@ class NicknameDialogBloc
     if (_firebaseApi.isAuth()) {
       _user.setNickname(event.nickname);
       _user.setUid(_firebaseApi.userUid());
-      _user.setColor(Random().nextInt(0xffffffff));
+      _user.setRandomColor();
       emit(AuthState());
     } else {
       emit(ErrorState());
