@@ -18,9 +18,7 @@ class _CurrencyTextFieldState extends State<CurrencyTextField> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    if (!isPortrait &&
-        !isKeyboardDialogShown &&
-        MediaQuery.of(context).viewInsets.bottom == 0) {
+    if (!isPortrait && !isKeyboardDialogShown) {
       FocusManager.instance.primaryFocus?.unfocus();
     }
   }
