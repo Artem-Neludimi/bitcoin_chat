@@ -56,15 +56,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   _onStreamMessage(StreamMessageEvent event, Emitter<HomeState> emit) async {
     try {
       await emit.onEach(_chatRepository.messagesStream(), onData: ((snapshot) {
+        final last = Message.fromJson(snapshot.docs.last.data() as Map);
         if (messages.isEmpty) {
           messages = snapshot.docs
               .map((e) => Message.fromJson(e.data() as Map))
               .toList();
-          messages.last.isWhenUserJoin = true;
+          last.isWhenUserJoin = true;
+          emit(MessagesState());
+        } else if (last.uid != _user.uid) {
+          messages.add(last);
           emit(MessagesState());
         } else {
-          messages.add(Message.fromJson(snapshot.docs.last.data() as Map));
-          emit(MessagesState());
+          messages.add(last);
+          emit(WriteMessageState());
         }
       }));
     } catch (e) {
@@ -73,10 +77,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  _onWriteMessage(WriteMessageEvent event, Emitter<HomeState> emit) {
+  _onWriteMessage(WriteMessageEvent event, Emitter<HomeState> emit) async {
     try {
-      _chatRepository.writeMessage(event.message);
-      emit(WriteMessageState());
+      await _chatRepository.writeMessage(event.message);
+      await Future.delayed(const Duration(milliseconds: 100), () {
+        if (!messages.contains(event.message)) {
+          messages.add(event.message..isSend = false);
+          emit(WriteMessageState());
+        }
+      });
     } catch (e) {
       emit(ErrorState());
       throw Exception(e);

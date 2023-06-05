@@ -165,7 +165,7 @@ class _ChartState extends State<Chart> {
 
     return SizedBox(
       height: isPortrait
-          ? size.height * 0.45
+          ? size.height * 0.35
           : size.height - widget.statusBarHeight,
       child: StreamBuilder(
         stream: _channel == null ? null : _channel!.stream,

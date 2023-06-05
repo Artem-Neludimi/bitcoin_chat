@@ -144,6 +144,8 @@ class _HomeState extends State<Home> {
                           children: [
                             Wrap(
                               children: [
+                                if (!messages[index].isSend)
+                                  const Icon(Icons.error),
                                 RichText(
                                   text: TextSpan(
                                     children: [

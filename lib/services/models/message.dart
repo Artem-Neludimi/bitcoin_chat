@@ -1,4 +1,6 @@
-class Message {
+import 'package:equatable/equatable.dart';
+
+class Message extends Equatable {
   String? nickname;
   String? text;
   String? uid;
@@ -36,4 +38,7 @@ class Message {
         'time': time,
         'color': color,
       };
+
+  @override
+  List<Object?> get props => [nickname, text, uid, time, color];
 }
