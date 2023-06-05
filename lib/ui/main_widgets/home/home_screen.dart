@@ -1,3 +1,4 @@
+import 'package:bitcoin_chat/ui/helper_widgets/no_internet_conection_dialog.dart';
 import 'package:bitcoin_chat/ui/helper_widgets/setting_dialog.dart';
 import 'package:bitcoin_chat/ui/main_widgets/chart/chart.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,7 +23,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _user = getIt<User>();
-  final _bloc = HomeBloc(ChatRepository(), getIt<User>());
+  final _bloc = HomeBloc();
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
   var _isAuth = false;
@@ -76,10 +77,6 @@ class _HomeState extends State<Home> {
                 context: context,
                 builder: (context) => const ColorPickerDialog());
           }
-          if (state is ErrorState) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: const Text('error').tr()));
-          }
           if (state is MessagesState) {}
           if (state is WriteMessageState) {
             _scrollController.animateTo(
@@ -87,6 +84,16 @@ class _HomeState extends State<Home> {
               duration: const Duration(milliseconds: 200),
               curve: Curves.fastOutSlowIn,
             );
+          }
+          if (state is NoInternetConnectionState) {
+            showDialog(
+              context: context,
+              builder: (context) => const NoInternetConnectionDialog(),
+            );
+          }
+          if (state is ErrorState) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: const Text('error').tr()));
           }
         },
         builder: (context, state) {

@@ -25,4 +25,6 @@ class WriteMessageState extends HomeState {}
 
 class MessagesState extends HomeState {}
 
+class NoInternetConnectionState extends HomeState {}
+
 class ErrorState extends HomeState {}

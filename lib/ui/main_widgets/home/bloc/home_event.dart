@@ -19,6 +19,8 @@ class AuthEvent extends HomeEvent {}
 
 class StreamMessageEvent extends HomeEvent {}
 
+class StreamInternetConnectionEvent extends HomeEvent {}
+
 class WriteMessageEvent extends HomeEvent {
   final Message message;
 

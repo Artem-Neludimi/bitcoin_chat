@@ -1,8 +1,9 @@
 {
-  "welcome" : "Welcome to the chat!",
-  "chat" : "chat",
-  "error" : "Error!",
-  "nickname" : "Nickname",
-  "sendMessage" : "Send a message",
-  "nicknameSet" : "Set a nickname first"
+  "welcome": "Welcome to the chat!",
+  "chat": "chat",
+  "error": "Error!",
+  "nickname": "Nickname",
+  "sendMessage": "Send a message",
+  "nicknameSet": "Set a nickname first",
+  "noInternetConnection": "No internet connection"
 }

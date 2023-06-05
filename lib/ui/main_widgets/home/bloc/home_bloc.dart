@@ -1,35 +1,37 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:bitcoin_chat/services/api/chat_repository.dart';
 import 'package:bitcoin_chat/services/models/message.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../../../../models/user.dart';
+import '../../../../services/get_it.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final ChatRepository _chatRepository;
-  final User _user;
-  HomeBloc(
-    this._chatRepository,
-    this._user,
-  ) : super(HomeInitial()) {
+  HomeBloc() : super(HomeInitial()) {
     on<InitialEvent>(_onInitial);
     on<NicknameEvent>(_onNickname);
     on<SettingsEvent>(_onSettings);
     on<ColorPickerEvent>(_onColorPicker);
     on<AuthEvent>(_onAuth);
+    on<StreamInternetConnectionEvent>(_onStreamInternetConnection);
     on<StreamMessageEvent>(_onStreamMessage);
     on<WriteMessageEvent>(_onWriteMessage);
     on<ErrorEvent>(_onError);
     _init();
   }
+  final ChatRepository _chatRepository = ChatRepository();
+  final User _user = getIt<User>();
+
   List<Message> messages = [];
 
   _init() {
-    add(NicknameEvent());
+    add(StreamInternetConnectionEvent());
     add(StreamMessageEvent());
   }
 
@@ -75,6 +77,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(ErrorState());
       throw Exception(e);
     }
+  }
+
+  _onStreamInternetConnection(
+    StreamInternetConnectionEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    if (await InternetConnectionChecker().hasConnection) {
+      add(NicknameEvent());
+    } else {
+      emit(NoInternetConnectionState());
+    }
+    emit.onEach(
+      Connectivity().onConnectivityChanged,
+      onData: (data) async {
+        if (!await InternetConnectionChecker().hasConnection) {
+          emit(NoInternetConnectionState());
+        }
+      },
+    );
   }
 
   _onWriteMessage(WriteMessageEvent event, Emitter<HomeState> emit) async {
