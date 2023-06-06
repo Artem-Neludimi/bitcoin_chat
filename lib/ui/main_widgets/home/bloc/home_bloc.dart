@@ -63,7 +63,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           messages = snapshot.docs
               .map((e) => Message.fromJson(e.data() as Map))
               .toList();
-          last.isWhenUserJoin = true;
+          messages.last.isWhenUserJoin = true;
           emit(MessagesState());
         } else if (last.uid != _user.uid) {
           messages.add(last);
