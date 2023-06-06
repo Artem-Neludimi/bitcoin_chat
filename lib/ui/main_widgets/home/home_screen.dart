@@ -5,7 +5,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../services/api/chat_repository.dart';
 import '../../../../services/get_it.dart';
 import '../../../models/user.dart';
 import '../../../services/models/message.dart';
@@ -113,187 +112,192 @@ class _HomeState extends State<Home> {
           return Scaffold(
             resizeToAvoidBottomInset: _isAuth,
             appBar: CurrencyAppBar(statusBarHeight),
-            body: Column(
-              children: [
-                Stack(
-                  children: [
-                    Chart(statusBarHeight: statusBarHeight),
-                    Positioned(
-                      top: -8,
-                      right: -8,
-                      child: IconButton(
-                        onPressed: () {
-                          _bloc.add(SettingsEvent());
-                        },
-                        icon: const Icon(
-                          Icons.settings,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      Chart(statusBarHeight: statusBarHeight),
+                      Positioned(
+                        top: -8,
+                        right: -8,
+                        child: IconButton(
+                          onPressed: () {
+                            _bloc.add(SettingsEvent());
+                          },
+                          icon: const Icon(
+                            Icons.settings,
+                          ),
                         ),
+                      )
+                    ],
+                  ),
+                  if (isPortrait) ...[
+                    Expanded(
+                      child: ListView.separated(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        shrinkWrap: true,
+                        reverse: true,
+                        itemCount: messages.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 3),
+                        itemBuilder: (context, index) {
+                          index = (index - messages.length).abs() - 1;
+                          final primaryColor = theme.colorScheme.primary;
+                          const offset = 0.1;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Wrap(
+                                children: [
+                                  if (!messages[index].isSend)
+                                    const Icon(Icons.error),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: '${messages[index].nickname}',
+                                          style: TextStyle(
+                                            color:
+                                                Color(messages[index].color!),
+                                            fontSize: theme.textTheme
+                                                    .titleSmall!.fontSize! -
+                                                offset,
+                                            shadows: [
+                                              Shadow(
+                                                  // bottomLeft
+                                                  offset: const Offset(
+                                                      -offset, -offset),
+                                                  color: primaryColor),
+                                              Shadow(
+                                                  // bottomRight
+                                                  offset: const Offset(
+                                                      offset, -offset),
+                                                  color: primaryColor),
+                                              Shadow(
+                                                  // topRight
+                                                  offset: const Offset(
+                                                      offset, offset),
+                                                  color: primaryColor),
+                                              Shadow(
+                                                  // topLeft
+                                                  offset: const Offset(
+                                                      -offset, offset),
+                                                  color: primaryColor),
+                                            ],
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          style: theme.textTheme.titleSmall,
+                                          text:
+                                              ': ${messages[index].text!.replaceAll(RegExp('\\s+'), ' ')}',
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                              if (messages[index].isWhenUserJoin)
+                                Container(
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: const Text(
+                                    'welcome',
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic),
+                                  ).tr(),
+                                ),
+                            ],
+                          );
+                        },
                       ),
-                    )
-                  ],
-                ),
-                if (isPortrait) ...[
-                  Expanded(
-                    child: ListView.separated(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      shrinkWrap: true,
-                      reverse: true,
-                      itemCount: messages.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 3),
-                      itemBuilder: (context, index) {
-                        index = (index - messages.length).abs() - 1;
-                        final primaryColor = theme.colorScheme.primary;
-                        const offset = 0.1;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Wrap(
-                              children: [
-                                if (!messages[index].isSend)
-                                  const Icon(Icons.error),
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: '${messages[index].nickname}',
-                                        style: TextStyle(
-                                          color: Color(messages[index].color!),
-                                          fontSize: theme.textTheme.titleSmall!
-                                                  .fontSize! -
-                                              offset,
-                                          shadows: [
-                                            Shadow(
-                                                // bottomLeft
-                                                offset: const Offset(
-                                                    -offset, -offset),
-                                                color: primaryColor),
-                                            Shadow(
-                                                // bottomRight
-                                                offset: const Offset(
-                                                    offset, -offset),
-                                                color: primaryColor),
-                                            Shadow(
-                                                // topRight
-                                                offset: const Offset(
-                                                    offset, offset),
-                                                color: primaryColor),
-                                            Shadow(
-                                                // topLeft
-                                                offset: const Offset(
-                                                    -offset, offset),
-                                                color: primaryColor),
-                                          ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (!_isAuth) {
+                          _bloc.add(
+                            NicknameEvent(
+                              title: const Text('nicknameSet').tr(),
+                            ),
+                          );
+                        }
+                      },
+                      child: AbsorbPointer(
+                        absorbing: !_isAuth,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 3),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _textController,
+                                  keyboardType: TextInputType.multiline,
+                                  minLines: 1,
+                                  maxLines: 3,
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 20),
+                                    hintText: 'sendMessage'.tr(),
+                                    isDense: true,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 150),
+                                  transitionBuilder: (child, anim) =>
+                                      RotationTransition(
+                                    turns: child.key == const ValueKey('icon1')
+                                        ? Tween<double>(begin: 0, end: 0)
+                                            .animate(anim)
+                                        : Tween<double>(begin: 0, end: 0)
+                                            .animate(anim),
+                                    child: ScaleTransition(
+                                        scale: anim, child: child),
+                                  ),
+                                  child: text == ''
+                                      ? const Icon(Icons.color_lens,
+                                          key: ValueKey('icon1'))
+                                      : const Icon(
+                                          Icons.send,
+                                          key: ValueKey('icon2'),
+                                        ),
+                                ),
+                                onPressed: () {
+                                  if (text.isNotEmpty) {
+                                    _bloc.add(
+                                      WriteMessageEvent(
+                                        message: Message(
+                                          nickname: _user.nickname,
+                                          text: text,
+                                          uid: _user.uid,
+                                          time:
+                                              DateTime.now().toIso8601String(),
+                                          color: _user.color,
                                         ),
                                       ),
-                                      TextSpan(
-                                        style: theme.textTheme.titleSmall,
-                                        text:
-                                            ': ${messages[index].text!.replaceAll(RegExp('\\s+'), ' ')}',
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                            if (messages[index].isWhenUserJoin)
-                              Container(
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.only(top: 5),
-                                child: const Text(
-                                  'welcome',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ).tr(),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      if (!_isAuth) {
-                        _bloc.add(
-                          NicknameEvent(
-                            title: const Text('nicknameSet').tr(),
+                                    );
+                                    _textController.clear();
+                                  } else {
+                                    _bloc.add(ColorPickerEvent());
+                                  }
+                                },
+                              )
+                            ],
                           ),
-                        );
-                      }
-                    },
-                    child: AbsorbPointer(
-                      absorbing: !_isAuth,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 3),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _textController,
-                                keyboardType: TextInputType.multiline,
-                                minLines: 1,
-                                maxLines: 3,
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 20),
-                                  hintText: 'sendMessage'.tr(),
-                                  isDense: true,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 150),
-                                transitionBuilder: (child, anim) =>
-                                    RotationTransition(
-                                  turns: child.key == const ValueKey('icon1')
-                                      ? Tween<double>(begin: 0, end: 0)
-                                          .animate(anim)
-                                      : Tween<double>(begin: 0, end: 0)
-                                          .animate(anim),
-                                  child: ScaleTransition(
-                                      scale: anim, child: child),
-                                ),
-                                child: text == ''
-                                    ? const Icon(Icons.color_lens,
-                                        key: ValueKey('icon1'))
-                                    : const Icon(
-                                        Icons.send,
-                                        key: ValueKey('icon2'),
-                                      ),
-                              ),
-                              onPressed: () {
-                                if (text.isNotEmpty) {
-                                  _bloc.add(
-                                    WriteMessageEvent(
-                                      message: Message(
-                                        nickname: _user.nickname,
-                                        text: text,
-                                        uid: _user.uid,
-                                        time: DateTime.now().toIso8601String(),
-                                        color: _user.color,
-                                      ),
-                                    ),
-                                  );
-                                  _textController.clear();
-                                } else {
-                                  _bloc.add(ColorPickerEvent());
-                                }
-                              },
-                            )
-                          ],
                         ),
                       ),
                     ),
-                  ),
-                ]
-              ],
+                  ]
+                ],
+              ),
             ),
           );
         },
