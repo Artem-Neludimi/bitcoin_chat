@@ -88,7 +88,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else {
       emit(NoInternetConnectionState());
     }
-    emit.onEach(
+    await emit.onEach(
       Connectivity().onConnectivityChanged,
       onData: (data) async {
         if (!await InternetConnectionChecker().hasConnection) {
