@@ -20,7 +20,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with WidgetsBindingObserver {
   final _user = getIt<User>();
   final _bloc = HomeBloc();
   final _textController = TextEditingController();
@@ -30,6 +30,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
     _textController.addListener(() {
       if (_textController.text.trim().isNotEmpty ||
           _textController.text.trim().isEmpty) setState(() {});
@@ -37,8 +38,28 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _bloc.add(FetchMessagesEvent());
+        // print("app in resumed");
+        break;
+      case AppLifecycleState.inactive:
+        // print("app in inactive");
+        break;
+      case AppLifecycleState.paused:
+        // print("app in paused");
+        break;
+      case AppLifecycleState.detached:
+        // print("app in detached");
+        break;
+    }
+  }
+
+  @override
   void dispose() {
     super.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
     _textController.dispose();
     _scrollController.dispose();
   }
@@ -96,7 +117,8 @@ class _HomeState extends State<Home> {
           }
         },
         builder: (context, state) {
-          final List<Message> messages = context.read<HomeBloc>().messages;
+          final List<Message> messages =
+              context.read<HomeBloc>().messages.toList();
 
           if (state is HomeInitial) {
             return Scaffold(

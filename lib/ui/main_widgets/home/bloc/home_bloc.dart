@@ -21,14 +21,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<AuthEvent>(_onAuth);
     on<StreamInternetConnectionEvent>(_onStreamInternetConnection);
     on<StreamMessageEvent>(_onStreamMessage);
+    on<FetchMessagesEvent>(_onFetchMessages);
     on<WriteMessageEvent>(_onWriteMessage);
     on<ErrorEvent>(_onError);
     _init();
   }
   final ChatRepository _chatRepository = ChatRepository();
   final User _user = getIt<User>();
+  var _isFirstTime = true;
 
-  List<Message> messages = [];
+  var messages = <Message>{};
 
   _init() {
     add(StreamInternetConnectionEvent());
@@ -59,17 +61,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       await emit.onEach(_chatRepository.messagesStream(), onData: ((snapshot) {
         final last = Message.fromJson(snapshot.docs.last.data() as Map);
-        if (messages.isEmpty) {
-          messages = snapshot.docs
-              .map((e) => Message.fromJson(e.data() as Map))
-              .toList();
+        messages.addAll(
+          snapshot.docs.map(
+            (e) => Message.fromJson(
+              e.data() as Map,
+            ),
+          ),
+        );
+        if (_isFirstTime) {
+          _isFirstTime = false;
           messages.last.isWhenUserJoin = true;
-          emit(MessagesState());
-        } else if (last.uid != _user.uid) {
-          messages.add(last);
-          emit(MessagesState());
-        } else {
-          messages.add(last);
+        }
+        emit(MessagesState());
+        if (last.uid == _user.uid) {
           emit(WriteMessageState());
         }
       }));
@@ -77,6 +81,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(ErrorState());
       throw Exception(e);
     }
+  }
+
+  _onFetchMessages(FetchMessagesEvent event, Emitter<HomeState> state) async {
+    _chatRepository.messagesStream().listen((event) {
+      final data = event.docs.map((e) => Message.fromJson(e.data() as Map));
+      messages.addAll(data);
+    });
+    emit(MessagesState());
   }
 
   _onStreamInternetConnection(

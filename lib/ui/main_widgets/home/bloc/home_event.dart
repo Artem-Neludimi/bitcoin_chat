@@ -19,6 +19,8 @@ class AuthEvent extends HomeEvent {}
 
 class StreamMessageEvent extends HomeEvent {}
 
+class FetchMessagesEvent extends HomeEvent {}
+
 class StreamInternetConnectionEvent extends HomeEvent {}
 
 class WriteMessageEvent extends HomeEvent {
