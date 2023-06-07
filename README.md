@@ -1,7 +1,8 @@
 # bitcoin_chat
 
-A high-performance full-featured candlesticks chart for android and ios.
+A high-performance full-featured candlesticks chart for android and ios. 
 With online group chat for discussing cryptocurrencies and market movement.
+Build with firebase firestore database and binance api.
 
 ![chart](https://github.com/Artem-Neludimi/bitcoin_chat/assets/122924465/2b815736-2ebd-4409-b109-65538181e01f)
 
