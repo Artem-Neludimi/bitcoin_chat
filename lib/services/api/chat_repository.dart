@@ -36,6 +36,11 @@ class ChatRepository {
     }
   }
 
+  Future<List<Message>> getAllMessages() async {
+    final data = await _messages.get();
+    return data.docs.map((e) => Message.fromJson(e.data())).toList();
+  }
+
   Stream<QuerySnapshot> messagesStream() {
     return _messages.orderBy('time').snapshots();
   }

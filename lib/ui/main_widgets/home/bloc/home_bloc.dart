@@ -84,11 +84,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   _onFetchMessages(FetchMessagesEvent event, Emitter<HomeState> emit) async {
-    _chatRepository.messagesStream().listen((event) {
-      final data = event.docs.map((e) => Message.fromJson(e.data() as Map));
+    try {
+      final data = await _chatRepository.getAllMessages();
       messages.addAll(data);
-    });
-    emit(MessagesState());
+      emit(MessagesState());
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   _onStreamInternetConnection(
