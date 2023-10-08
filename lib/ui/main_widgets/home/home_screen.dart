@@ -30,44 +30,28 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _textController.addListener(() {
-      if (_textController.text.trim().isNotEmpty ||
-          _textController.text.trim().isEmpty) setState(() {});
+      if (_textController.text.trim().isNotEmpty || _textController.text.trim().isEmpty) setState(() {});
     });
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.resumed:
-        _bloc.add(FetchMessagesEvent());
-        // print("app in resumed");
-        break;
-      case AppLifecycleState.inactive:
-        // print("app in inactive");
-        break;
-      case AppLifecycleState.paused:
-        // print("app in paused");
-        break;
-      case AppLifecycleState.detached:
-        // print("app in detached");
-        break;
-    }
+    if (state == AppLifecycleState.resumed) _bloc.add(FetchMessagesEvent());
   }
 
   @override
   void dispose() {
     super.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     _textController.dispose();
     _scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
     final theme = Theme.of(context);
     final text = _textController.text.trim();
@@ -93,9 +77,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             );
           }
           if (state is ColorPickerState) {
-            showDialog(
-                context: context,
-                builder: (context) => const ColorPickerDialog());
+            showDialog(context: context, builder: (context) => const ColorPickerDialog());
           }
           if (state is MessagesState) {}
           if (state is WriteMessageState) {
@@ -112,13 +94,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             );
           }
           if (state is ErrorState) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: const Text('error').tr()));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('error').tr()));
           }
         },
         builder: (context, state) {
-          final List<Message> messages =
-              context.read<HomeBloc>().messages.toList();
+          final List<Message> messages = context.read<HomeBloc>().messages.toList();
 
           if (state is HomeInitial) {
             return Scaffold(
@@ -162,8 +142,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                         shrinkWrap: true,
                         reverse: true,
                         itemCount: messages.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 3),
+                        separatorBuilder: (context, index) => const SizedBox(height: 3),
                         itemBuilder: (context, index) {
                           index = (index - messages.length).abs() - 1;
                           final primaryColor = theme.colorScheme.primary;
@@ -173,47 +152,38 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                             children: [
                               Wrap(
                                 children: [
-                                  if (!messages[index].isSend)
-                                    const Icon(Icons.error),
+                                  if (!messages[index].isSend) const Icon(Icons.error),
                                   RichText(
                                     text: TextSpan(
                                       children: [
                                         TextSpan(
                                           text: '${messages[index].nickname}',
                                           style: TextStyle(
-                                            color:
-                                                Color(messages[index].color!),
-                                            fontSize: theme.textTheme
-                                                    .titleSmall!.fontSize! -
-                                                offset,
+                                            color: Color(messages[index].color!),
+                                            fontSize: theme.textTheme.titleSmall!.fontSize! - offset,
                                             shadows: [
                                               Shadow(
                                                   // bottomLeft
-                                                  offset: const Offset(
-                                                      -offset, -offset),
+                                                  offset: const Offset(-offset, -offset),
                                                   color: primaryColor),
                                               Shadow(
                                                   // bottomRight
-                                                  offset: const Offset(
-                                                      offset, -offset),
+                                                  offset: const Offset(offset, -offset),
                                                   color: primaryColor),
                                               Shadow(
                                                   // topRight
-                                                  offset: const Offset(
-                                                      offset, offset),
+                                                  offset: const Offset(offset, offset),
                                                   color: primaryColor),
                                               Shadow(
                                                   // topLeft
-                                                  offset: const Offset(
-                                                      -offset, offset),
+                                                  offset: const Offset(-offset, offset),
                                                   color: primaryColor),
                                             ],
                                           ),
                                         ),
                                         TextSpan(
                                           style: theme.textTheme.titleSmall,
-                                          text:
-                                              ': ${messages[index].text!.replaceAll(RegExp('\\s+'), ' ')}',
+                                          text: ': ${messages[index].text!.replaceAll(RegExp('\\s+'), ' ')}',
                                         ),
                                       ],
                                     ),
@@ -226,8 +196,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: const Text(
                                     'welcome',
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic),
+                                    style: TextStyle(fontStyle: FontStyle.italic),
                                   ).tr(),
                                 ),
                             ],
@@ -248,8 +217,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                       child: AbsorbPointer(
                         absorbing: !_isAuth,
                         child: Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 3),
+                          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                           child: Row(
                             children: [
                               Expanded(
@@ -259,8 +227,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                   minLines: 1,
                                   maxLines: 3,
                                   decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 20),
+                                    contentPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                                     hintText: 'sendMessage'.tr(),
                                     isDense: true,
                                     filled: true,
@@ -274,19 +241,14 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                               IconButton(
                                 icon: AnimatedSwitcher(
                                   duration: const Duration(milliseconds: 150),
-                                  transitionBuilder: (child, anim) =>
-                                      RotationTransition(
+                                  transitionBuilder: (child, anim) => RotationTransition(
                                     turns: child.key == const ValueKey('icon1')
-                                        ? Tween<double>(begin: 0, end: 0)
-                                            .animate(anim)
-                                        : Tween<double>(begin: 0, end: 0)
-                                            .animate(anim),
-                                    child: ScaleTransition(
-                                        scale: anim, child: child),
+                                        ? Tween<double>(begin: 0, end: 0).animate(anim)
+                                        : Tween<double>(begin: 0, end: 0).animate(anim),
+                                    child: ScaleTransition(scale: anim, child: child),
                                   ),
                                   child: text == ''
-                                      ? const Icon(Icons.color_lens,
-                                          key: ValueKey('icon1'))
+                                      ? const Icon(Icons.color_lens, key: ValueKey('icon1'))
                                       : const Icon(
                                           Icons.send,
                                           key: ValueKey('icon2'),
@@ -300,8 +262,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                           nickname: _user.nickname,
                                           text: text,
                                           uid: _user.uid,
-                                          time:
-                                              DateTime.now().toIso8601String(),
+                                          time: DateTime.now().toIso8601String(),
                                           color: _user.color,
                                         ),
                                       ),
