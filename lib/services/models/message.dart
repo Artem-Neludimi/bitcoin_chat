@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class Message extends Equatable {
+class Message with EquatableMixin {
   String? nickname;
   String? text;
   String? uid;
