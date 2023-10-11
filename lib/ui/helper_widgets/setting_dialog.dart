@@ -24,19 +24,28 @@ class _SettingsDialogState extends State<SettingsDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
+      contentPadding: const EdgeInsets.all(8),
       children: [
         ListTile(
             leading: const Icon(Icons.language),
             trailing: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
                 iconSize: 0,
                 value: locales[currentLocale],
-                items: locales.values
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: locales.values.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
                       value,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white70,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -48,7 +57,38 @@ class _SettingsDialogState extends State<SettingsDialog> {
                   );
                 },
               ),
-            ))
+            )),
+        ListTile(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(24),
+            ),
+          ),
+          onTap: () => showLicensePage(
+            context: context,
+            applicationIcon: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Image.asset('assets/images/app_icon.png', width: 64, height: 64),
+            ),
+          ),
+          leading: const Icon(Icons.description_outlined),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'licenses',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white70,
+                ),
+              ).tr(),
+              const Icon(
+                Icons.chevron_right_rounded,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

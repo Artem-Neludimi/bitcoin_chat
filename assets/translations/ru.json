@@ -5,5 +5,6 @@
   "nickname": "Никнейм",
   "sendMessage": "Отправить сообщение",
   "nicknameSet": "Выберите никнейм",
-  "noInternetConnection": "Нет интернет соединения"
+  "noInternetConnection": "Нет интернет соединения",
+  "licenses": "Лицензии"
 }
