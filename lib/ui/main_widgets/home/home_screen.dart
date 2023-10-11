@@ -77,7 +77,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             );
           }
           if (state is ColorPickerState) {
-            showDialog(context: context, builder: (context) => const ColorPickerDialog());
+            showDialog(context: context, builder: (context) => const ColorPickerDialog())
+                .whenComplete(() => setState(() {}));
           }
           if (state is MessagesState) {}
           if (state is WriteMessageState) {
@@ -248,7 +249,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                     child: ScaleTransition(scale: anim, child: child),
                                   ),
                                   child: text == ''
-                                      ? const Icon(Icons.color_lens, key: ValueKey('icon1'))
+                                      ? Icon(
+                                          Icons.color_lens,
+                                          key: const ValueKey('icon1'),
+                                          color: Color(_user.color ?? 0xFFFFFFFF),
+                                        )
                                       : const Icon(
                                           Icons.send,
                                           key: ValueKey('icon2'),
