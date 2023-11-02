@@ -1,4 +1,4 @@
-package com.example.bitcoin_chat
+package com.neludim.bitcoin_chat
 
 import io.flutter.embedding.android.FlutterActivity
 
