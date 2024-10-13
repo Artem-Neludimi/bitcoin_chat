@@ -60,11 +60,9 @@ packages:
   candlesticks:
     dependency: "direct main"
     description:
-      path: "."
-      ref: master
-      resolved-ref: "899fa3c18bcb6b050a205c35155c64e31d4918bc"
-      url: "https://github.com/r-mzy47/candlesticks.git"
-    source: git
+      path: "packages/candlesticks"
+      relative: true
+    source: path
     version: "2.1.2"
   change_app_package_name:
     dependency: "direct dev"

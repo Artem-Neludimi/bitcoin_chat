@@ -1,11 +1,11 @@
 name: bitcoin_chat
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -18,9 +18,7 @@ dependencies:
   cloud_firestore: ^5.4.4
   flutter_colorpicker: ^1.0.3
   candlesticks:
-    git:
-      url: https://github.com/r-mzy47/candlesticks.git
-      ref: master
+    path: packages/candlesticks
   web_socket_channel: ^3.0.1
   http: ^1.0.0
   easy_localization: ^3.0.2
